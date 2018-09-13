@@ -14,5 +14,5 @@
     <string name="choose_a_door">Choose a door</string>
     <string name="wins">Wins</string>
     <string name="loss">Loss</string>
-    <string name="total">total</string>
+    <string name="total">Total</string>
 </resources>

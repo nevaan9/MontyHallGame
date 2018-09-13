@@ -7,12 +7,14 @@
 
     <ImageButton
         android:id="@+id/door1"
-        style="@style/door">
+        style="@style/door"
+        android:layout_marginRight="20dp">
     </ImageButton>
 
     <ImageButton
         android:id="@+id/door2"
-        style="@style/door"></ImageButton>
+        style="@style/door"
+        android:layout_marginRight="20dp"/>
 
     <ImageButton
         android:id="@+id/door3"

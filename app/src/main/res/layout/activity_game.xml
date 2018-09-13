@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,8 +11,8 @@
         android:name="com.example.nevaanperera.montyhallgame.GameFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_game">
-    </fragment>
+        android:layout_centerInParent="true"
+        tools:layout="@layout/fragment_game"></fragment>
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
