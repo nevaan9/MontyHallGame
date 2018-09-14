@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 
 /**
@@ -23,7 +24,21 @@ public class GameFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_game, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_game, container, false);
+
+        // Get the doors
+        ImageButton door1 = rootView.findViewById(R.id.door1);
+        ImageButton door2 = rootView.findViewById(R.id.door2);
+        ImageButton door3 = rootView.findViewById(R.id.door3);
+
+        door1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Hello! I just got clicke!");
+            }
+        });
+
+        return rootView;
     }
 
 }
