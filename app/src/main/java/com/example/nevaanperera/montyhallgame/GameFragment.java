@@ -21,6 +21,8 @@ public class GameFragment extends Fragment {
     private ImageButton door2 = null;
     private ImageButton door3 = null;
 
+    private TextView header = null;
+
     private boolean door1Pressed = false;
     private boolean door2Pressed = false;
     private boolean door3Pressed = false;
@@ -29,6 +31,7 @@ public class GameFragment extends Fragment {
     private int secondGoatDoor = 0;
 
     private boolean doorChoosen = false;
+    private int strategy = 0; // 1 is stay, 2 is switch, 0 is not initialized
 
     private int prize_door;
     private int choosen_door;
@@ -62,12 +65,11 @@ public class GameFragment extends Fragment {
         door3 = rootView.findViewById(R.id.door3);
         doorImages[2] = door3;
 
+        // Get the header
+        header = rootView.findViewById(R.id.game_activity_header);
 
         // Initialize the prize door
         prize_door = (int) (Math.random() * 3 + 1);
-
-        // Get the header
-        final TextView game_activity_heaer = rootView.findViewById(R.id.game_activity_header);
 
         // Set onClick Listerner for door1
         door1.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +77,8 @@ public class GameFragment extends Fragment {
             public void onClick(View v) {
                 if (!door1Pressed) {
                     if (doorChoosen) {
-                        revealAnswers(1);
+                        strategy = (choosen_door == 1) ? 1 : 2;
+                        revealAnswers(1, strategy);
                     } else {
                         door1.setImageLevel(1);
                         choosen_door = 1;
@@ -91,7 +94,8 @@ public class GameFragment extends Fragment {
             public void onClick(View v) {
                 if (!door2Pressed) {
                     if (doorChoosen) {
-                        revealAnswers(2);
+                        strategy = (choosen_door == 2) ? 1 : 2;
+                        revealAnswers(2, strategy);
                     } else {
                         door2.setImageLevel(1);
                         choosen_door = 2;
@@ -107,7 +111,8 @@ public class GameFragment extends Fragment {
             public void onClick(View v) {
                 if (!door3Pressed) {
                     if (doorChoosen) {
-                        revealAnswers(3);
+                        strategy = (choosen_door == 3) ? 1 : 2;
+                        revealAnswers(3, strategy);
                     } else {
                         door3.setImageLevel(1);
                         choosen_door = 3;
@@ -118,13 +123,6 @@ public class GameFragment extends Fragment {
         });
 
         return rootView;
-    }
-
-    // Initialize the listener
-
-    public void doorPressed () {
-        // Do something
-
     }
 
     public void revealDoors () {
@@ -168,6 +166,9 @@ public class GameFragment extends Fragment {
                 doorChoosen = true;
                 break;
         }
+
+        // Remove the header
+        header.setText("");
 
         // Set the Stay Image
         if (choosen_door == prize_door) {
@@ -231,7 +232,7 @@ public class GameFragment extends Fragment {
         }
     }
 
-    public void revealAnswers (int pressedButton) {
+    public void revealAnswers (int pressedButton, int strategy) {
         for (int i = 1; i < 4; i++) {
             if (i == prize_door) {
                 doorImages[i -1].setImageLevel(4);
@@ -241,10 +242,12 @@ public class GameFragment extends Fragment {
         }
 
         if (pressedButton == prize_door) {
-            System.out.println("YOU WON!");
+            System.out.println("YOU WON, with strategy " + strategy);
         } else {
-            System.out.println("YOU LOST!");
+            System.out.println("YOU LOST with strategy " + strategy);
         }
+
+        header.setText("Play again?");
     }
 
 }
