@@ -75,10 +75,10 @@ public class GameFragment extends Fragment {
         door1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (doorChoosen) {
-                    revealAnswers();
-                } else {
-                    if (!door1Pressed) {
+                if (!door1Pressed) {
+                    if (doorChoosen) {
+                        revealAnswers();
+                    } else {
                         door1.setImageLevel(1);
                         choosen_door = 1;
                         revealDoors();
@@ -91,10 +91,10 @@ public class GameFragment extends Fragment {
         door2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (doorChoosen) {
-                    revealAnswers();
-                } else {
-                    if (!door2Pressed){
+                if (!door2Pressed) {
+                    if (doorChoosen) {
+                        revealAnswers();
+                    } else {
                         door2.setImageLevel(1);
                         choosen_door = 2;
                         revealDoors();
@@ -107,10 +107,10 @@ public class GameFragment extends Fragment {
         door3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (doorChoosen) {
-                    revealAnswers();
-                } else {
-                    if (!door3Pressed) {
+                if (!door3Pressed) {
+                    if (doorChoosen) {
+                        revealAnswers();
+                    } else {
                         door3.setImageLevel(1);
                         choosen_door = 3;
                         revealDoors();
