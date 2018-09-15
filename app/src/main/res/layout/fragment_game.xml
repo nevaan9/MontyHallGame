@@ -12,7 +12,9 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/game_activity_header"
+            android:gravity="center"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:text="@string/choose_a_door"
             android:textSize="26sp"
@@ -34,11 +36,27 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_row="0"
+                    android:padding="5dp"
+                    android:text="@string/switch_text" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_row="0"
+                    android:padding="5dp"
+                    android:text="@string/stay_text" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
-                android:layout_row="0"
+                android:layout_row="1"
                 android:padding="5dp"
                 android:text="@string/wins" />
 
@@ -46,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
-                android:layout_row="1"
+                android:layout_row="2"
                 android:padding="5dp"
                 android:text="@string/loss" />
 
@@ -54,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
-                android:layout_row="2"
+                android:layout_row="3"
                 android:padding="5dp"
                 android:text="@string/total" />
 
@@ -62,14 +80,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
-                android:layout_row="0"
-                android:padding="5dp"
-                android:text="0" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
                 android:layout_row="1"
                 android:padding="5dp"
                 android:text="0" />
@@ -85,8 +95,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_row="0"
+                android:layout_column="1"
+                android:layout_row="3"
                 android:padding="5dp"
                 android:text="0" />
 
@@ -103,6 +113,14 @@
                 android:layout_height="wrap_content"
                 android:layout_column="2"
                 android:layout_row="2"
+                android:padding="5dp"
+                android:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:layout_row="3"
                 android:padding="5dp"
                 android:text="0" />
 

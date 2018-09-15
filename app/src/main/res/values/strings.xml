@@ -15,4 +15,6 @@
     <string name="wins">Wins</string>
     <string name="loss">Loss</string>
     <string name="total">Total</string>
+    <string name="switch_text">Switch</string>
+    <string name="stay_text">Stay</string>
 </resources>
