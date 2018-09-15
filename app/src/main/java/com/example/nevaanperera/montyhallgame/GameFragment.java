@@ -1,6 +1,5 @@
 package com.example.nevaanperera.montyhallgame;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 
@@ -77,7 +75,7 @@ public class GameFragment extends Fragment {
             public void onClick(View v) {
                 if (!door1Pressed) {
                     if (doorChoosen) {
-                        revealAnswers();
+                        revealAnswers(1);
                     } else {
                         door1.setImageLevel(1);
                         choosen_door = 1;
@@ -93,7 +91,7 @@ public class GameFragment extends Fragment {
             public void onClick(View v) {
                 if (!door2Pressed) {
                     if (doorChoosen) {
-                        revealAnswers();
+                        revealAnswers(2);
                     } else {
                         door2.setImageLevel(1);
                         choosen_door = 2;
@@ -109,7 +107,7 @@ public class GameFragment extends Fragment {
             public void onClick(View v) {
                 if (!door3Pressed) {
                     if (doorChoosen) {
-                        revealAnswers();
+                        revealAnswers(3);
                     } else {
                         door3.setImageLevel(1);
                         choosen_door = 3;
@@ -230,17 +228,22 @@ public class GameFragment extends Fragment {
                     door3.setImageLevel(2);
                     break;
             }
-
         }
     }
 
-    public void revealAnswers () {
+    public void revealAnswers (int pressedButton) {
         for (int i = 1; i < 4; i++) {
             if (i == prize_door) {
                 doorImages[i -1].setImageLevel(4);
             } else {
                 doorImages[i -1].setImageLevel(5);
             }
+        }
+
+        if (pressedButton == prize_door) {
+            System.out.println("YOU WON!");
+        } else {
+            System.out.println("YOU LOST!");
         }
     }
 
