@@ -129,19 +129,8 @@ public class GameFragment extends Fragment {
             i++;
         }
 
+        // Set the goat image
         switch (randomDoor) {
-            case 1:
-                door1.setImageLevel(3);
-                break;
-            case 2:
-                door2.setImageLevel(3);
-                break;
-            case 3:
-                door3.setImageLevel(3);
-                break;
-        }
-
-        switch (choosen_door) {
             case 1:
                 door1.setImageLevel(5);
                 break;
@@ -153,16 +142,67 @@ public class GameFragment extends Fragment {
                 break;
         }
 
-        switch (prize_door) {
-            case 1:
-                door1.setImageLevel(6);
-                break;
-            case 2:
-                door2.setImageLevel(6);
-                break;
-            case 3:
-                door3.setImageLevel(6);
-                break;
+        // Set the Stay Image
+        if (choosen_door == prize_door) {
+            switch (choosen_door) {
+                case 1:
+                    door1.setImageLevel(3);
+                    break;
+                case 2:
+                    door2.setImageLevel(3);
+                    break;
+                case 3:
+                    door3.setImageLevel(3);
+                    break;
+            }
+
+            // Find  the remaining door
+            int remainingDoor = 0;
+            for (int r = 1; r < 4; r++){
+                if (r != choosen_door && r != randomDoor) {
+                    remainingDoor = r;
+                }
+            }
+
+            // Change the remaining door to switch
+            switch (remainingDoor) {
+                case 1:
+                    door1.setImageLevel(2);
+                    break;
+                case 2:
+                    door2.setImageLevel(2);
+                    break;
+                case 3:
+                    door3.setImageLevel(2);
+                    break;
+            }
+
+        } else {
+            // If we are in this else statement, it means the choosen door and prize door are different
+            switch (choosen_door) {
+                case 1:
+                    door1.setImageLevel(3);
+                    break;
+                case 2:
+                    door2.setImageLevel(3);
+                    break;
+                case 3:
+                    door3.setImageLevel(3);
+                    break;
+            }
+
+            switch (prize_door) {
+                case 1:
+                    door1.setImageLevel(2);
+                    break;
+                case 2:
+                    door2.setImageLevel(2);
+                    break;
+                case 3:
+                    door3.setImageLevel(2);
+                    break;
+            }
+
         }
     }
 
