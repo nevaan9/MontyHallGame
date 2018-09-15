@@ -19,13 +19,23 @@ import java.util.Set;
  */
 public class GameFragment extends Fragment {
 
-    ImageButton door1 = null;
-    ImageButton door2 = null;
-    ImageButton door3 = null;
-    private boolean initialDoorPressed = false;
+    private ImageButton door1 = null;
+    private ImageButton door2 = null;
+    private ImageButton door3 = null;
+
+    private boolean door1Pressed = false;
+    private boolean door2Pressed = false;
+    private boolean door3Pressed = false;
+
+    private int firstGoatDoor = 0;
+    private int secondGoatDoor = 0;
+
+    private boolean doorChoosen = false;
+
     private int prize_door;
     private int choosen_door;
     private String[] doorIDs = new String[3];
+    private ImageButton[] doorImages = new ImageButton[3];
 
 
     public GameFragment() {
@@ -44,10 +54,16 @@ public class GameFragment extends Fragment {
         doorIDs[1] = "door2";
         doorIDs[2] = "door3";
 
-        // Get the doors
+        // Get the doors and add them to the array
         door1 = rootView.findViewById(R.id.door1);
+        doorImages[0] = door1;
+
         door2 = rootView.findViewById(R.id.door2);
+        doorImages[1] = door2;
+
         door3 = rootView.findViewById(R.id.door3);
+        doorImages[2] = door3;
+
 
         // Initialize the prize door
         prize_door = (int) (Math.random() * 3 + 1);
@@ -59,11 +75,14 @@ public class GameFragment extends Fragment {
         door1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!initialDoorPressed) {
-                    door1.setImageLevel(1);
-                    choosen_door = 1;
-                    showGoat();
-                    initialDoorPressed = true;
+                if (doorChoosen) {
+                    revealAnswers();
+                } else {
+                    if (!door1Pressed) {
+                        door1.setImageLevel(1);
+                        choosen_door = 1;
+                        revealDoors();
+                    }
                 }
             }
         });
@@ -72,11 +91,14 @@ public class GameFragment extends Fragment {
         door2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!initialDoorPressed){
-                    door2.setImageLevel(1);
-                    choosen_door = 2;
-                    showGoat();
-                    initialDoorPressed = true;
+                if (doorChoosen) {
+                    revealAnswers();
+                } else {
+                    if (!door2Pressed){
+                        door2.setImageLevel(1);
+                        choosen_door = 2;
+                        revealDoors();
+                    }
                 }
             }
         });
@@ -85,11 +107,14 @@ public class GameFragment extends Fragment {
         door3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!initialDoorPressed) {
-                    door3.setImageLevel(1);
-                    choosen_door = 3;
-                    showGoat();
-                    initialDoorPressed = true;
+                if (doorChoosen) {
+                    revealAnswers();
+                } else {
+                    if (!door3Pressed) {
+                        door3.setImageLevel(1);
+                        choosen_door = 3;
+                        revealDoors();
+                    }
                 }
             }
         });
@@ -104,10 +129,8 @@ public class GameFragment extends Fragment {
 
     }
 
-    public void showGoat () {
+    public void revealDoors () {
         Set<Integer> myHashSet = new HashSet<>();
-        int randomDoor = 0;
-
         // Insert the doors (into the set) that is not chooses and is not the prize door
         for (String anID : doorIDs) {
             if (!anID.equals("door" + prize_door) && !anID.equals("door" + choosen_door)){
@@ -122,7 +145,7 @@ public class GameFragment extends Fragment {
         for(int aGoatDoor : myHashSet)
         {
             if (i == item) {
-                randomDoor = aGoatDoor;
+                firstGoatDoor = aGoatDoor;
                 myHashSet.remove(aGoatDoor);
                 break;
             }
@@ -130,15 +153,21 @@ public class GameFragment extends Fragment {
         }
 
         // Set the goat image
-        switch (randomDoor) {
+        switch (firstGoatDoor) {
             case 1:
                 door1.setImageLevel(5);
+                door1Pressed = true;
+                doorChoosen = true;
                 break;
             case 2:
                 door2.setImageLevel(5);
+                door2Pressed = true;
+                doorChoosen = true;
                 break;
             case 3:
                 door3.setImageLevel(5);
+                door3Pressed = true;
+                doorChoosen = true;
                 break;
         }
 
@@ -157,15 +186,14 @@ public class GameFragment extends Fragment {
             }
 
             // Find  the remaining door
-            int remainingDoor = 0;
             for (int r = 1; r < 4; r++){
-                if (r != choosen_door && r != randomDoor) {
-                    remainingDoor = r;
+                if (r != choosen_door && r != firstGoatDoor) {
+                    secondGoatDoor = r;
                 }
             }
 
             // Change the remaining door to switch
-            switch (remainingDoor) {
+            switch (secondGoatDoor) {
                 case 1:
                     door1.setImageLevel(2);
                     break;
@@ -203,6 +231,16 @@ public class GameFragment extends Fragment {
                     break;
             }
 
+        }
+    }
+
+    public void revealAnswers () {
+        for (int i = 1; i < 4; i++) {
+            if (i == prize_door) {
+                doorImages[i -1].setImageLevel(4);
+            } else {
+                doorImages[i -1].setImageLevel(5);
+            }
         }
     }
 
