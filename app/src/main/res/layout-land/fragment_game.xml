@@ -17,21 +17,28 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/header_layout"
                 android:layout_height="wrap_content"
-                android:text="@string/choose_a_door"
-                android:textSize="26sp"
-                android:layout_marginBottom="30dp">
+                android:layout_width="wrap_content">
 
-            </TextView>
+                <TextView
+                    android:id="@+id/game_activity_header"
+                    android:gravity="center"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_a_door"
+                    android:textSize="26sp"
+                    android:layout_marginBottom="30dp">
+                </TextView>
+
+            </LinearLayout>
 
             <include
                 android:id="@+id/door_images"
                 layout="@layout/doors"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-
             </include>
 
 
@@ -91,6 +98,7 @@
                     android:text="@string/total" />
 
                 <TextView
+                    android:id="@+id/switch_wins"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="1"
@@ -99,6 +107,7 @@
                     android:text="0" />
 
                 <TextView
+                    android:id="@+id/switch_losses"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="1"
@@ -107,6 +116,7 @@
                     android:text="0" />
 
                 <TextView
+                    android:id="@+id/switch_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="1"
@@ -115,6 +125,7 @@
                     android:text="0" />
 
                 <TextView
+                    android:id="@+id/stay_wins"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="2"
@@ -123,6 +134,7 @@
                     android:text="0" />
 
                 <TextView
+                    android:id="@+id/stay_losses"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="2"
@@ -131,6 +143,7 @@
                     android:text="0" />
 
                 <TextView
+                    android:id="@+id/stay_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="2"

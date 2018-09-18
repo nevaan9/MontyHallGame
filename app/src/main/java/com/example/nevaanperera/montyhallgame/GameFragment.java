@@ -1,10 +1,14 @@
 package com.example.nevaanperera.montyhallgame;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -22,6 +26,16 @@ public class GameFragment extends Fragment {
     private ImageButton door3 = null;
 
     private TextView header = null;
+    private TextView switchWinsText = null;
+    private TextView switchLossesText = null;
+    private TextView stayTotal = null;
+    private TextView stayWinsText = null;
+    private TextView stayLossesText = null;
+    private TextView switchTotal = null;
+
+    private ViewGroup header_layout = null;
+
+    private Button replayBtn = null;
 
     private boolean door1Pressed = false;
     private boolean door2Pressed = false;
@@ -29,6 +43,11 @@ public class GameFragment extends Fragment {
 
     private int firstGoatDoor = 0;
     private int secondGoatDoor = 0;
+
+    private double switchWins = 0;
+    private double switchLosses = 0;
+    private double stayWins = 0;
+    private double stayLosses = 0;
 
     private boolean doorChoosen = false;
     private int strategy = 0; // 1 is stay, 2 is switch, 0 is not initialized
@@ -43,6 +62,12 @@ public class GameFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // This will not destroy the instance data on rotation
+        setRetainInstance(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,11 +90,29 @@ public class GameFragment extends Fragment {
         door3 = rootView.findViewById(R.id.door3);
         doorImages[2] = door3;
 
+        switchWinsText = rootView.findViewById(R.id.switch_wins);
+        switchLossesText = rootView.findViewById(R.id.switch_losses);
+        stayWinsText = rootView.findViewById(R.id.stay_wins);
+        stayLossesText = rootView.findViewById(R.id.stay_losses);
+        stayTotal = rootView.findViewById(R.id.stay_total);
+        switchTotal = rootView.findViewById(R.id.switch_total);
+
         // Get the header
         header = rootView.findViewById(R.id.game_activity_header);
 
+        // Get the header layout
+        header_layout = rootView.findViewById(R.id.header_layout);
+
+        // Make the replay button
+        replayBtn = new Button(getContext());
+        replayBtn.setText("Yes");
+        replayBtn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
         // Initialize the prize door
         prize_door = (int) (Math.random() * 3 + 1);
+
+        // Initialize the animation
+        final Animation animShake = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
 
         // Set onClick Listerner for door1
         door1.setOnClickListener(new View.OnClickListener() {
@@ -78,9 +121,10 @@ public class GameFragment extends Fragment {
                 if (!door1Pressed) {
                     if (doorChoosen) {
                         strategy = (choosen_door == 1) ? 1 : 2;
-                        revealAnswers(1, strategy);
+                        revealAnswers(1);
                     } else {
                         door1.setImageLevel(1);
+                        door1.startAnimation(animShake);
                         choosen_door = 1;
                         revealDoors();
                     }
@@ -95,9 +139,10 @@ public class GameFragment extends Fragment {
                 if (!door2Pressed) {
                     if (doorChoosen) {
                         strategy = (choosen_door == 2) ? 1 : 2;
-                        revealAnswers(2, strategy);
+                        revealAnswers(2);
                     } else {
                         door2.setImageLevel(1);
+                        door2.startAnimation(animShake);
                         choosen_door = 2;
                         revealDoors();
                     }
@@ -112,13 +157,21 @@ public class GameFragment extends Fragment {
                 if (!door3Pressed) {
                     if (doorChoosen) {
                         strategy = (choosen_door == 3) ? 1 : 2;
-                        revealAnswers(3, strategy);
+                        revealAnswers(3);
                     } else {
                         door3.setImageLevel(1);
+                        door3.startAnimation(animShake);
                         choosen_door = 3;
                         revealDoors();
                     }
                 }
+            }
+        });
+
+        replayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetGame();
             }
         });
 
@@ -232,7 +285,7 @@ public class GameFragment extends Fragment {
         }
     }
 
-    public void revealAnswers (int pressedButton, int strategy) {
+    public void revealAnswers (int pressedButton) {
         for (int i = 1; i < 4; i++) {
             if (i == prize_door) {
                 doorImages[i -1].setImageLevel(4);
@@ -242,12 +295,78 @@ public class GameFragment extends Fragment {
         }
 
         if (pressedButton == prize_door) {
-            System.out.println("YOU WON, with strategy " + strategy);
+            // Won
+            if (strategy == 1) {
+                stayWins++;
+            } else {
+                switchWins++;
+            }
         } else {
-            System.out.println("YOU LOST with strategy " + strategy);
+            if (strategy == 1) {
+                stayLosses++;
+            } else {
+                switchLosses++;
+            }
         }
 
-        header.setText("Play again?");
+        door1Pressed = true;
+        door2Pressed = true;
+        door3Pressed = true;
+
+        header.setText("Play Again?");
+        header_layout.addView(replayBtn);
+
+        updateWinLossBoard();
     }
+
+    public void resetGame() {
+        // Reset the images
+        for (int i = 1; i < 4; i++) {
+            if (i == prize_door) {
+                doorImages[i -1].setImageLevel(0);
+            } else {
+                doorImages[i -1].setImageLevel(0);
+            }
+        }
+
+        door1Pressed = false;
+        door2Pressed = false;
+        door3Pressed = false;
+
+        firstGoatDoor = 0;
+        secondGoatDoor = 0;
+
+        doorChoosen = false;
+        strategy = 0; // 1 is stay, 2 is switch, 0 is not initialized
+
+        prize_door = (int) (Math.random() * 3 + 1);
+        choosen_door = 0;
+        header.setText("Choose a door");
+        header_layout.removeView(replayBtn);
+    }
+
+    public void updateWinLossBoard () {
+        int switchTotalNum = (int) (switchWins + switchLosses);
+        double switchWinPerc = (switchTotalNum > 0) ? (switchWins / switchTotalNum) : 0;
+        double switchLossPerc = (switchTotalNum > 0) ? (switchLosses / switchTotalNum) : 0;
+        String switchWinCell = (int) switchWins + " (" + (int)(switchWinPerc*100)+ "%)";
+        String switchLossCell = (int) switchLosses + " (" + (int)(switchLossPerc*100) + "%)";
+
+        switchWinsText.setText(switchWinCell);
+        switchLossesText.setText(switchLossCell);
+        switchTotal.setText(String.valueOf((int)(switchWins + switchLosses)));
+
+        int stayTotalNum = (int) (stayWins + stayLosses);
+        double stayWinPerc = (stayTotalNum > 0) ? (stayWins / stayTotalNum) : 0;
+        double stayLossPerc = (stayTotalNum > 0) ? (stayLosses / stayTotalNum) : 0;
+        String stayWinCell = (int) stayWins + " (" + (int)(stayWinPerc*100) + "%)";
+        String stayLossCell = (int) stayLosses + " (" + (int)(stayLossPerc*100) + "%)";
+
+        stayWinsText.setText(stayWinCell);
+        stayLossesText.setText(stayLossCell);
+        stayTotal.setText(String.valueOf((int)(stayWins + stayLosses)));
+    }
+
+
 
 }
