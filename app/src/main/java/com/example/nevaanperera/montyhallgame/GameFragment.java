@@ -80,15 +80,6 @@ public class GameFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // This will not destroy the instance data on rotation
-        setRetainInstance(true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_game, container, false);
 
         // Game state
         gameState = 0;
@@ -97,29 +88,6 @@ public class GameFragment extends Fragment {
         doorIDs[0] = "door1";
         doorIDs[1] = "door2";
         doorIDs[2] = "door3";
-
-        // Get the doors and add them to the array
-        door1 = rootView.findViewById(R.id.door1);
-        doorImages[0] = door1;
-
-        door2 = rootView.findViewById(R.id.door2);
-        doorImages[1] = door2;
-
-        door3 = rootView.findViewById(R.id.door3);
-        doorImages[2] = door3;
-
-        switchWinsText = rootView.findViewById(R.id.switch_wins);
-        switchLossesText = rootView.findViewById(R.id.switch_losses);
-        stayWinsText = rootView.findViewById(R.id.stay_wins);
-        stayLossesText = rootView.findViewById(R.id.stay_losses);
-        stayTotal = rootView.findViewById(R.id.stay_total);
-        switchTotal = rootView.findViewById(R.id.switch_total);
-
-        // Get the header
-        header = rootView.findViewById(R.id.game_activity_header);
-
-        // Get the header layout
-        header_layout = rootView.findViewById(R.id.header_layout);
 
         // Initialize the media player sounds
         goat_sound = MediaPlayer.create(getContext(), R.raw.goat);
@@ -145,6 +113,39 @@ public class GameFragment extends Fragment {
 
         // Initialize the prize door
         prize_door = (int) (Math.random() * 3 + 1);
+
+        // This will not destroy the instance data on rotation
+        setRetainInstance(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_game, container, false);
+
+        // Get the doors and add them to the array
+        door1 = rootView.findViewById(R.id.door1);
+        doorImages[0] = door1;
+
+        door2 = rootView.findViewById(R.id.door2);
+        doorImages[1] = door2;
+
+        door3 = rootView.findViewById(R.id.door3);
+        doorImages[2] = door3;
+
+        switchWinsText = rootView.findViewById(R.id.switch_wins);
+        switchLossesText = rootView.findViewById(R.id.switch_losses);
+        stayWinsText = rootView.findViewById(R.id.stay_wins);
+        stayLossesText = rootView.findViewById(R.id.stay_losses);
+        stayTotal = rootView.findViewById(R.id.stay_total);
+        switchTotal = rootView.findViewById(R.id.switch_total);
+
+        // Get the header
+        header = rootView.findViewById(R.id.game_activity_header);
+
+        // Get the header layout
+        header_layout = rootView.findViewById(R.id.header_layout);
 
         // Initialize the animation
         final Animation animShake = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
@@ -213,33 +214,70 @@ public class GameFragment extends Fragment {
             }
         });
 
+        header_layout.removeView(replayBtn);
+        updateUI();
+        updateWinLossBoard ();
+
         return rootView;
+    }
+
+    public void updateUI(){
+        if (gameState == 1) {
+            switch (choosen_door) {
+                case 1:
+                    door1.setImageLevel(5);
+                    break;
+                case 2:
+                    door2.setImageLevel(5);
+                    break;
+                case 3:
+                    door3.setImageLevel(5);
+                    break;
+            }
+            revealDoors();
+        } else if (gameState == 2) {
+            for (int i = 1; i < 4; i++) {
+                if (i == prize_door) {
+                    doorImages[i -1].setImageLevel(4);
+                } else {
+                    doorImages[i -1].setImageLevel(5);
+                }
+            }
+            header.setText("Play Again?");
+
+            if (replayBtn.getParent() != null) {
+                ((ViewGroup)replayBtn.getParent()).removeView(replayBtn);
+            }
+
+            header_layout.addView(replayBtn);
+        }
     }
 
     public void revealDoors () {
         // Now game state is 1
         gameState = 1;
 
-        Set<Integer> myHashSet = new HashSet<>();
-        // Insert the doors (into the set) that is not chooses and is not the prize door
-        for (String anID : doorIDs) {
-            if (!anID.equals("door" + prize_door) && !anID.equals("door" + choosen_door)){
-                myHashSet.add(Integer.parseInt(anID.replaceAll("\\D+","")));
+        if (!doorChoosen) {
+            Set<Integer> myHashSet = new HashSet<>();
+            // Insert the doors (into the set) that is not chooses and is not the prize door
+            for (String anID : doorIDs) {
+                if (!anID.equals("door" + prize_door) && !anID.equals("door" + choosen_door)) {
+                    myHashSet.add(Integer.parseInt(anID.replaceAll("\\D+", "")));
+                }
             }
-        }
 
-        // get a random door
-        int size = myHashSet.size();
-        int item = (int) (Math.random() * size + 1);
-        int i = 1;
-        for(int aGoatDoor : myHashSet)
-        {
-            if (i == item) {
-                firstGoatDoor = aGoatDoor;
-                myHashSet.remove(aGoatDoor);
-                break;
+            // get a random door
+            int size = myHashSet.size();
+            int item = (int) (Math.random() * size + 1);
+            int i = 1;
+            for (int aGoatDoor : myHashSet) {
+                if (i == item) {
+                    firstGoatDoor = aGoatDoor;
+                    myHashSet.remove(aGoatDoor);
+                    break;
+                }
+                i++;
             }
-            i++;
         }
 
         // Set the goat image
@@ -330,14 +368,6 @@ public class GameFragment extends Fragment {
         // Now game state is 2
         gameState = 2;
 
-        for (int i = 1; i < 4; i++) {
-            if (i == prize_door) {
-                doorImages[i -1].setImageLevel(4);
-            } else {
-                doorImages[i -1].setImageLevel(5);
-            }
-        }
-
         if (pressedButton == prize_door) {
             // Won
             int randomSound = (int) (Math.random() * winSound_arrayList.size());
@@ -362,11 +392,7 @@ public class GameFragment extends Fragment {
         door2Pressed = true;
         door3Pressed = true;
 
-
-
-        header.setText("Play Again?");
-        header_layout.addView(replayBtn);
-
+        updateUI();
         updateWinLossBoard();
     }
 
