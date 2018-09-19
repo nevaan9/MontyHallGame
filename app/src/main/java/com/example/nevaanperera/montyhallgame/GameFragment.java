@@ -109,7 +109,7 @@ public class GameFragment extends Fragment {
         // Make the replay button
         replayBtn = new Button(getContext());
         replayBtn.setText("Yes");
-        replayBtn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        replayBtn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         // Initialize the prize door
         prize_door = (int) (Math.random() * 3 + 1);
