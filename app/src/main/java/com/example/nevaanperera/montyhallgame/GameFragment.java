@@ -1,5 +1,6 @@
 package com.example.nevaanperera.montyhallgame;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,6 +58,16 @@ public class GameFragment extends Fragment {
     private int choosen_door;
     private String[] doorIDs = new String[3];
     private ImageButton[] doorImages = new ImageButton[3];
+
+    // Media player
+    MediaPlayer goat_sound = null;
+    MediaPlayer win1_sound = null;
+    MediaPlayer win2_sound = null;
+    MediaPlayer loss1_sound = null;
+    MediaPlayer loss2_sound = null;
+
+    private ArrayList<MediaPlayer> winSound_arrayList;
+    private ArrayList<MediaPlayer> lossSound_arrayList;
 
 
     public GameFragment() {
@@ -103,6 +115,23 @@ public class GameFragment extends Fragment {
         // Get the header layout
         header_layout = rootView.findViewById(R.id.header_layout);
 
+        // Initialize the media player sounds
+        goat_sound = MediaPlayer.create(getContext(), R.raw.goat);
+        win1_sound = MediaPlayer.create(getContext(), R.raw.win1);
+        win2_sound = MediaPlayer.create(getContext(), R.raw.win1);
+        loss1_sound = MediaPlayer.create(getContext(), R.raw.loss1);
+        loss2_sound = MediaPlayer.create(getContext(), R.raw.loss2);
+
+        // Initialize the arrayLists
+        winSound_arrayList = new ArrayList<>();
+        winSound_arrayList.add(win1_sound);
+        winSound_arrayList.add(win2_sound);
+
+        lossSound_arrayList = new ArrayList<>();
+        lossSound_arrayList.add(loss1_sound);
+        lossSound_arrayList.add(loss2_sound);
+
+
         // Make the replay button
         replayBtn = new Button(getContext());
         replayBtn.setText("Yes");
@@ -125,6 +154,7 @@ public class GameFragment extends Fragment {
                     } else {
                         door1.setImageLevel(1);
                         door1.startAnimation(animShake);
+                        goat_sound.start();
                         choosen_door = 1;
                         revealDoors();
                     }
@@ -143,6 +173,7 @@ public class GameFragment extends Fragment {
                     } else {
                         door2.setImageLevel(1);
                         door2.startAnimation(animShake);
+                        goat_sound.start();
                         choosen_door = 2;
                         revealDoors();
                     }
@@ -161,6 +192,7 @@ public class GameFragment extends Fragment {
                     } else {
                         door3.setImageLevel(1);
                         door3.startAnimation(animShake);
+                        goat_sound.start();
                         choosen_door = 3;
                         revealDoors();
                     }
@@ -296,12 +328,17 @@ public class GameFragment extends Fragment {
 
         if (pressedButton == prize_door) {
             // Won
+            int randomSound = (int) (Math.random() * winSound_arrayList.size());
+            winSound_arrayList.get(randomSound).start();
             if (strategy == 1) {
                 stayWins++;
             } else {
                 switchWins++;
             }
         } else {
+            // Lost
+            int randomSound = (int) (Math.random() * lossSound_arrayList.size());
+            lossSound_arrayList.get(randomSound).start();
             if (strategy == 1) {
                 stayLosses++;
             } else {
@@ -312,6 +349,8 @@ public class GameFragment extends Fragment {
         door1Pressed = true;
         door2Pressed = true;
         door3Pressed = true;
+
+
 
         header.setText("Play Again?");
         header_layout.addView(replayBtn);
