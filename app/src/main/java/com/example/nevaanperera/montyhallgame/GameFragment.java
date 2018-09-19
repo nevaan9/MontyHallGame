@@ -69,6 +69,9 @@ public class GameFragment extends Fragment {
     private ArrayList<MediaPlayer> winSound_arrayList;
     private ArrayList<MediaPlayer> lossSound_arrayList;
 
+    // Variable to keep track of Game state
+    private int gameState;
+
 
     public GameFragment() {
         // Required empty public constructor
@@ -86,6 +89,9 @@ public class GameFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_game, container, false);
+
+        // Game state
+        gameState = 0;
 
         // Initialize the doorID's
         doorIDs[0] = "door1";
@@ -211,6 +217,9 @@ public class GameFragment extends Fragment {
     }
 
     public void revealDoors () {
+        // Now game state is 1
+        gameState = 1;
+
         Set<Integer> myHashSet = new HashSet<>();
         // Insert the doors (into the set) that is not chooses and is not the prize door
         for (String anID : doorIDs) {
@@ -318,6 +327,9 @@ public class GameFragment extends Fragment {
     }
 
     public void revealAnswers (int pressedButton) {
+        // Now game state is 2
+        gameState = 2;
+
         for (int i = 1; i < 4; i++) {
             if (i == prize_door) {
                 doorImages[i -1].setImageLevel(4);
@@ -359,6 +371,9 @@ public class GameFragment extends Fragment {
     }
 
     public void resetGame() {
+        // Game state is set to 0 again
+        gameState = 0;
+
         // Reset the images
         for (int i = 1; i < 4; i++) {
             if (i == prize_door) {
