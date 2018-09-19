@@ -118,7 +118,7 @@ public class GameFragment extends Fragment {
         // Initialize the media player sounds
         goat_sound = MediaPlayer.create(getContext(), R.raw.goat);
         win1_sound = MediaPlayer.create(getContext(), R.raw.win1);
-        win2_sound = MediaPlayer.create(getContext(), R.raw.win1);
+        win2_sound = MediaPlayer.create(getContext(), R.raw.win2);
         loss1_sound = MediaPlayer.create(getContext(), R.raw.loss1);
         loss2_sound = MediaPlayer.create(getContext(), R.raw.loss2);
 
