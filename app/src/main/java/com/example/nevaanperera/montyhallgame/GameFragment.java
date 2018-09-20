@@ -1,17 +1,24 @@
 package com.example.nevaanperera.montyhallgame;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -364,36 +371,82 @@ public class GameFragment extends Fragment {
         }
     }
 
-    public void revealAnswers (int pressedButton) {
+    public void revealAnswers (final int  pressedButton) {
         // Now game state is 2
         gameState = 2;
 
-        if (pressedButton == prize_door) {
-            // Won
-            int randomSound = (int) (Math.random() * winSound_arrayList.size());
-            winSound_arrayList.get(randomSound).start();
-            if (strategy == 1) {
-                stayWins++;
-            } else {
-                switchWins++;
-            }
-        } else {
-            // Lost
-            int randomSound = (int) (Math.random() * lossSound_arrayList.size());
-            lossSound_arrayList.get(randomSound).start();
-            if (strategy == 1) {
-                stayLosses++;
-            } else {
-                switchLosses++;
-            }
-        }
+        // Start a counter
+        new CountDownTimer(3000, 1000) {
 
-        door1Pressed = true;
-        door2Pressed = true;
-        door3Pressed = true;
+            private int count = 6;
 
-        updateUI();
-        updateWinLossBoard();
+            public void onTick(long millisUntilFinished) {
+                switch (pressedButton) {
+                    case 1:
+                        door1.setImageLevel(count++);
+                        break;
+                    case 2:
+                        door2.setImageLevel(count++);
+                        break;
+                    case 3:
+                        door3.setImageLevel(count++);
+                        break;
+                }
+            }
+
+            public void onFinish() {
+
+                String strategy_text = strategy == 1 ? "Stayed" : "Switched";
+
+                if (pressedButton == prize_door) {
+                    // Won
+                    int randomSound = (int) (Math.random() * winSound_arrayList.size());
+                    winSound_arrayList.get(randomSound).start();
+                    if (strategy == 1) {
+                        stayWins++;
+                    } else {
+                        switchWins++;
+                    }
+
+                    // Toast for winning
+                    Toast toast = Toast.makeText(getContext(), "You " + strategy_text + " and Won!", Toast.LENGTH_SHORT);
+                    if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        toast.setGravity(Gravity.BOTTOM, 0, 50);
+                        toast.show();
+                    } else {
+                        toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 50);
+                        toast.show();
+                    }
+                } else {
+                    // Lost
+                    int randomSound = (int) (Math.random() * lossSound_arrayList.size());
+                    lossSound_arrayList.get(randomSound).start();
+                    if (strategy == 1) {
+                        stayLosses++;
+                    } else {
+                        switchLosses++;
+                    }
+
+                    // Show a won / lost message
+                    Toast toast = Toast.makeText(getContext(), "You " + strategy_text + " and Lost.", Toast.LENGTH_SHORT);
+                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        toast.setGravity(Gravity.BOTTOM, 0, 50);
+                        toast.show();
+                    } else {
+                        toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 50);
+                        toast.show();
+                    }
+                }
+
+                door1Pressed = true;
+                door2Pressed = true;
+                door3Pressed = true;
+
+                updateUI();
+                updateWinLossBoard();
+            }
+        }.start();
+
     }
 
     public void resetGame() {
