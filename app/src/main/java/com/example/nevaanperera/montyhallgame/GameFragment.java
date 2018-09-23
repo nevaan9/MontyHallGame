@@ -1,6 +1,7 @@
 package com.example.nevaanperera.montyhallgame;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -221,6 +222,28 @@ public class GameFragment extends Fragment {
             }
         });
 
+
+        // This means the continue button was clicked
+            if (!(getActivity().getSharedPreferences(MainFragment.PREF_NAME, Context.MODE_PRIVATE).getBoolean(MainFragment.NEW_CLICKED, true)) && getActivity().getSharedPreferences(MainFragment.PREF_NAME, Context.MODE_PRIVATE).getBoolean("backPressed", false)) {
+                SharedPreferences pref_ed = getActivity().getSharedPreferences(MainFragment.PREF_NAME, Context.MODE_PRIVATE);
+                switchWins = pref_ed.getFloat("switchWins", 0);
+                switchLosses = pref_ed.getFloat("switchLosses", 0);
+                stayWins = pref_ed.getFloat("stayWins", 0);
+                door1Pressed = pref_ed.getBoolean("door1Pressed", false);
+                door2Pressed = pref_ed.getBoolean("door2Pressed", false);
+                door3Pressed = pref_ed.getBoolean("door3Pressed", false);
+                firstGoatDoor = pref_ed.getInt("firstGoatDoor", 0);
+                secondGoatDoor = pref_ed.getInt("secondGoatDoor", 0);
+                doorChoosen = pref_ed.getBoolean("doorChoosen", false);
+                strategy = pref_ed.getInt("strategy", 0);
+                prize_door = pref_ed.getInt("prizeDoor", 0);
+                choosen_door = pref_ed.getInt("choosenDoor", 0);
+                gameState = pref_ed.getInt("gameState", 0);
+
+                SharedPreferences.Editor editor = pref_ed.edit();
+                editor.putBoolean("backPressed", false).apply();
+        }
+
         header_layout.removeView(replayBtn);
         updateUI();
         updateWinLossBoard ();
@@ -375,6 +398,11 @@ public class GameFragment extends Fragment {
         // Now game state is 2
         gameState = 2;
 
+        // Disable all the buttons
+        door1Pressed = true;
+        door2Pressed = true;
+        door3Pressed = true;
+
         // Start a counter
         new CountDownTimer(3000, 1000) {
 
@@ -438,10 +466,6 @@ public class GameFragment extends Fragment {
                     }
                 }
 
-                door1Pressed = true;
-                door2Pressed = true;
-                door3Pressed = true;
-
                 updateUI();
                 updateWinLossBoard();
             }
@@ -500,6 +524,23 @@ public class GameFragment extends Fragment {
         stayTotal.setText(String.valueOf((int)(stayWins + stayLosses)));
     }
 
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        SharedPreferences.Editor pref_ed = getActivity().getSharedPreferences(MainFragment.PREF_NAME, Context.MODE_PRIVATE).edit();
+        pref_ed.putFloat("switchWins", (float) switchWins).apply();
+        pref_ed.putFloat("switchLosses", (float) switchLosses).apply();
+        pref_ed.putFloat("stayWins", (float) stayWins).apply();
+        pref_ed.putBoolean("door1Pressed", door1Pressed).apply();
+        pref_ed.putBoolean("door2Pressed", door2Pressed).apply();
+        pref_ed.putBoolean("door3Pressed", door3Pressed).apply();
+        pref_ed.putInt("firstGoatDoor", firstGoatDoor).apply();
+        pref_ed.putInt("secondGoatDoor", secondGoatDoor).apply();
+        pref_ed.putBoolean("doorChoosen", doorChoosen).apply();
+        pref_ed.putInt("strategy", strategy).apply();
+        pref_ed.putInt("prizeDoor", prize_door).apply();
+        pref_ed.putInt("choosenDoor", choosen_door).apply();
+        pref_ed.putInt("gameState", gameState).apply();
+        pref_ed.putBoolean("backPressed", true).apply();
+    }
 }

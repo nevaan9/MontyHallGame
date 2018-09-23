@@ -86,6 +86,22 @@ public class MainFragment extends Fragment {
             }
         });
 
+        View continueButton = rootView.findViewById(R.id.continue_button);
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // New not clicked, so that means continue was clicked
+                SharedPreferences.Editor pref_ed = getActivity().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit();
+                pref_ed.putBoolean(NEW_CLICKED, false).apply();
+
+                // First argument is the current argument; second argument is the activity get are going to
+                Intent intent = new Intent(getActivity(), GameActivity.class);
+
+                // Start the intent
+                getActivity().startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
