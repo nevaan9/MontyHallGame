@@ -229,6 +229,7 @@ public class GameFragment extends Fragment {
                 switchWins = pref_ed.getFloat("switchWins", 0);
                 switchLosses = pref_ed.getFloat("switchLosses", 0);
                 stayWins = pref_ed.getFloat("stayWins", 0);
+                stayLosses = pref_ed.getFloat("stayLosses", 0);
                 door1Pressed = pref_ed.getBoolean("door1Pressed", false);
                 door2Pressed = pref_ed.getBoolean("door2Pressed", false);
                 door3Pressed = pref_ed.getBoolean("door3Pressed", false);
@@ -531,6 +532,7 @@ public class GameFragment extends Fragment {
         pref_ed.putFloat("switchWins", (float) switchWins).apply();
         pref_ed.putFloat("switchLosses", (float) switchLosses).apply();
         pref_ed.putFloat("stayWins", (float) stayWins).apply();
+        pref_ed.putFloat("stayLosses", (float) stayLosses).apply();
         pref_ed.putBoolean("door1Pressed", door1Pressed).apply();
         pref_ed.putBoolean("door2Pressed", door2Pressed).apply();
         pref_ed.putBoolean("door3Pressed", door3Pressed).apply();
