@@ -425,50 +425,60 @@ public class GameFragment extends Fragment {
 
             public void onFinish() {
 
-                String strategy_text = strategy == 1 ? "Stayed" : "Switched";
+                try {
+                    // If user pressed back while the countDown timer thread is running, it will just show the cards but not update the scoreboard.
+                    if (getContext() == null) {
+                        throw new InterruptedException();
+                    } else {
+                        String strategy_text = strategy == 1 ? "Stayed" : "Switched";
 
-                if (pressedButton == prize_door) {
-                    // Won
-                    int randomSound = (int) (Math.random() * winSound_arrayList.size());
-                    winSound_arrayList.get(randomSound).start();
-                    if (strategy == 1) {
-                        stayWins++;
-                    } else {
-                        switchWins++;
+                        if (pressedButton == prize_door) {
+                            // Won
+                            int randomSound = (int) (Math.random() * winSound_arrayList.size());
+                            winSound_arrayList.get(randomSound).start();
+                            if (strategy == 1) {
+                                stayWins++;
+                            } else {
+                                switchWins++;
+                            }
+
+                            // Toast for winning
+                            Toast toast = Toast.makeText(getContext(), "You " + strategy_text + " and Won!", Toast.LENGTH_SHORT);
+                            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                toast.setGravity(Gravity.BOTTOM, 0, 50);
+                                toast.show();
+                            } else {
+                                toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 50);
+                                toast.show();
+                            }
+                        } else {
+                            // Lost
+                            int randomSound = (int) (Math.random() * lossSound_arrayList.size());
+                            lossSound_arrayList.get(randomSound).start();
+                            if (strategy == 1) {
+                                stayLosses++;
+                            } else {
+                                switchLosses++;
+                            }
+
+                            // Show a won / lost message
+                            Toast toast = Toast.makeText(getContext(), "You " + strategy_text + " and Lost.", Toast.LENGTH_SHORT);
+                            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                toast.setGravity(Gravity.BOTTOM, 0, 50);
+                                toast.show();
+                            } else {
+                                toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 50);
+                                toast.show();
+                            }
+                        }
+
+                        updateUI();
+                        updateWinLossBoard();
                     }
 
-                    // Toast for winning
-                    Toast toast = Toast.makeText(getContext(), "You " + strategy_text + " and Won!", Toast.LENGTH_SHORT);
-                    if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        toast.setGravity(Gravity.BOTTOM, 0, 50);
-                        toast.show();
-                    } else {
-                        toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 50);
-                        toast.show();
-                    }
-                } else {
-                    // Lost
-                    int randomSound = (int) (Math.random() * lossSound_arrayList.size());
-                    lossSound_arrayList.get(randomSound).start();
-                    if (strategy == 1) {
-                        stayLosses++;
-                    } else {
-                        switchLosses++;
-                    }
-
-                    // Show a won / lost message
-                    Toast toast = Toast.makeText(getContext(), "You " + strategy_text + " and Lost.", Toast.LENGTH_SHORT);
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        toast.setGravity(Gravity.BOTTOM, 0, 50);
-                        toast.show();
-                    } else {
-                        toast.setGravity(Gravity.BOTTOM|Gravity.RIGHT, 100, 50);
-                        toast.show();
-                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-                updateUI();
-                updateWinLossBoard();
             }
         }.start();
 
